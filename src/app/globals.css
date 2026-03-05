@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* ==========================================
+   Energy Monitor — Global Styles
+   Tema oscuro con acentos vibrantes
+   ========================================== */
+
+/* Base body styling */
+body {
+  background: #020617;
+  background-image: 
+    radial-gradient(ellipse at 10% 20%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+  min-height: 100vh;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ==========================================
+   Animaciones personalizadas
+   ========================================== */
+
+/* Fade-in para filas nuevas en la tabla de alertas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Efecto pulse rojo para emergencias */
+@keyframes emergencyPulse {
+  0%, 100% {
+    box-shadow: inset 0 0 0 0 rgba(244, 63, 94, 0);
+  }
+  50% {
+    box-shadow: inset 0 0 60px 10px rgba(244, 63, 94, 0.15);
+  }
+}
+
+.animate-emergency {
+  animation: emergencyPulse 0.8s ease-in-out 3;
+}
+
+/* Efecto shimmer para las barras de progreso */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
+/* Badge EN VIVO pulsante */
+@keyframes livePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-live {
+  animation: livePulse 1.5s ease-in-out infinite;
+}
+
+/* Efecto de brillo en botón de emergencia */
+@keyframes emergencyGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(244, 63, 94, 0.6), 0 0 60px rgba(244, 63, 94, 0.2);
+  }
+}
+
+.animate-emergency-glow {
+  animation: emergencyGlow 2s ease-in-out infinite;
+}
+
+/* Grid pattern de fondo (sutil) */
+.bg-grid {
+  background-image: 
+    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
