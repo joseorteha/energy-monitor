@@ -1,241 +1,264 @@
 'use client'
-import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import {
-  Activity, AlertTriangle, Play, Pause, Zap,
-  Building2, Settings, ChevronDown
+  Zap, Shield, TrendingDown, Leaf, ArrowRight,
+  BarChart3, Bell, Clock, CheckCircle2, ChevronRight,
+  Factory, Building2, Gauge
 } from 'lucide-react'
-import { useMotorDatos } from '../hooks/useMotorDatos'
-import { useEmpresa } from '../hooks/useEmpresa'
-import StatsCards from '../components/StatsCards'
-import ConsumoChart from '../components/ConsumoChart'
-import RankingAreas from '../components/RankingAreas'
-import AlertasTable from '../components/AlertasTable'
-import EmpresaSelector from '../components/EmpresaSelector'
-import GestionAreas from '../components/GestionAreas'
 
-export default function Dashboard() {
-  const {
-    empresas, empresaActiva, areasEmpresa, rol, permisos, cargado,
-    seleccionarEmpresa, cambiarRol, crearEmpresa, eliminarEmpresa,
-    agregarArea, editarArea, eliminarArea,
-  } = useEmpresa()
-
-  const {
-    lecturas, alertas, corriendo, setCorriendo,
-    dispararEmergencia, ultimaAlerta, metricas
-  } = useMotorDatos(areasEmpresa)
-
-  const [showEmergency, setShowEmergency] = useState(false)
-  const [showSelector, setShowSelector] = useState(false)
-  const [showGestion, setShowGestion] = useState(false)
-
-  // Mostrar selector si no hay empresa seleccionada
-  useEffect(() => {
-    if (cargado && !empresaActiva) {
-      setShowSelector(true)
-    }
-  }, [cargado, empresaActiva])
-
-  // Efecto pulse rojo al detectar anomalía
-  useEffect(() => {
-    if (ultimaAlerta) {
-      setShowEmergency(true)
-      const timer = setTimeout(() => setShowEmergency(false), 2400)
-      return () => clearTimeout(timer)
-    }
-  }, [ultimaAlerta])
-
-  // Loading state
-  if (!cargado) {
-    return (
-      <div className="min-h-screen bg-grid flex items-center justify-center">
-        <div className="flex items-center gap-3 text-slate-400">
-          <div className="w-5 h-5 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
-          <span>Cargando Energy Monitor...</span>
-        </div>
-      </div>
-    )
-  }
-
+export default function LandingPage() {
   return (
-    <div
-      className={`min-h-screen bg-grid transition-all duration-300 ${showEmergency ? 'animate-emergency' : ''
-        }`}
-    >
-      {/* ===== MODALES ===== */}
-      {showSelector && (
-        <EmpresaSelector
-          empresas={empresas}
-          empresaActiva={empresaActiva}
-          rol={rol}
-          permisos={permisos}
-          onSeleccionar={(id) => { seleccionarEmpresa(id); setShowSelector(false) }}
-          onCambiarRol={cambiarRol}
-          onCrearEmpresa={crearEmpresa}
-          onEliminarEmpresa={eliminarEmpresa}
-          onCerrar={empresaActiva ? () => setShowSelector(false) : undefined}
-        />
-      )}
-      {showGestion && empresaActiva && (
-        <GestionAreas
-          areas={areasEmpresa}
-          onAgregar={agregarArea}
-          onEditar={editarArea}
-          onEliminar={eliminarArea}
-          onCerrar={() => setShowGestion(false)}
-          soloLectura={permisos.soloLectura}
-        />
-      )}
-
-      {/* ===== HEADER ===== */}
-      <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo, título y empresa */}
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-sky-500 to-violet-600 shadow-lg shadow-sky-500/20">
-                <Zap size={24} className="text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                  Energy Monitor
-                </h1>
-                {/* Nombre de empresa activa */}
-                <button
-                  onClick={() => setShowSelector(true)}
-                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-sky-400 transition-colors cursor-pointer group"
-                >
-                  <Building2 size={12} />
-                  <span>{empresaActiva?.nombre || 'Seleccionar empresa'}</span>
-                  <ChevronDown size={12} className="group-hover:translate-y-0.5 transition-transform" />
-                </button>
-              </div>
-              {/* Badge EN VIVO */}
-              {corriendo && empresaActiva && (
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 ml-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-live" />
-                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                    En Vivo
-                  </span>
-                </div>
-              )}
+    <div className="min-h-screen bg-grid">
+      {/* ===== NAV ===== */}
+      <nav className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-sky-500 to-violet-600 shadow-lg shadow-sky-500/20">
+              <Zap size={22} className="text-white" />
             </div>
-
-            {/* Controles */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Gestión de Áreas (Admin/Empresa) */}
-              {permisos.puedeGestionarAreas && empresaActiva && (
-                <button
-                  onClick={() => setShowGestion(true)}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-sm font-semibold
-                    bg-violet-500/10 text-violet-400 hover:bg-violet-500/20
-                    border border-violet-500/30 transition-all duration-200 cursor-pointer"
-                >
-                  <Settings size={16} />
-                  <span className="hidden sm:inline">Áreas</span>
-                </button>
-              )}
-
-              {/* Botón Pausar/Reanudar */}
-              {empresaActiva && (
-                <button
-                  onClick={() => setCorriendo(!corriendo)}
-                  className={`
-                    flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-sm font-semibold
-                    transition-all duration-300 cursor-pointer
-                    ${corriendo
-                      ? 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'
-                      : 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30'
-                    }
-                  `}
-                >
-                  {corriendo ? <Pause size={16} /> : <Play size={16} />}
-                  <span className="hidden sm:inline">{corriendo ? 'Pausar' : 'Reanudar'}</span>
-                </button>
-              )}
-
-              {/* ===== BOTÓN DE EMERGENCIA ===== */}
-              {empresaActiva && (
-                <button
-                  onClick={dispararEmergencia}
-                  className="
-                    flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl
-                    bg-gradient-to-r from-rose-600 to-red-700
-                    text-white text-sm font-bold
-                    hover:from-rose-500 hover:to-red-600
-                    active:scale-95 transition-all duration-200
-                    animate-emergency-glow cursor-pointer
-                    border border-rose-500/50
-                  "
-                >
-                  <AlertTriangle size={18} className="animate-pulse" />
-                  <span className="hidden sm:inline">Simular Emergencia</span>
-                </button>
-              )}
-            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+              Energy Monitor
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+            >
+              Iniciar Sesión
+            </Link>
+            <Link
+              href="/registro"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-violet-600 text-white text-sm font-semibold hover:from-sky-400 hover:to-violet-500 transition-all shadow-lg shadow-sky-500/20"
+            >
+              Registrar Empresa
+            </Link>
           </div>
         </div>
-      </header>
+      </nav>
 
-      {/* ===== CONTENIDO PRINCIPAL ===== */}
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {empresaActiva ? (
-          <>
-            {/* Info de empresa */}
-            <div className="flex items-center gap-3 text-sm text-slate-500">
-              <Building2 size={14} />
-              <span>{empresaActiva.nombre}</span>
-              <span className="text-slate-700">·</span>
-              <span>{empresaActiva.industria}</span>
-              <span className="text-slate-700">·</span>
-              <span>{areasEmpresa.length} área{areasEmpresa.length !== 1 ? 's' : ''}</span>
-              <span className="text-slate-700">·</span>
-              <span className="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-xs capitalize">
-                {rol}
-              </span>
-            </div>
+      {/* ===== HERO ===== */}
+      <section className="relative overflow-hidden">
+        {/* Decoración de fondo */}
+        <div className="absolute top-20 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-40 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
 
-            {/* KPIs */}
-            <StatsCards metricas={metricas} />
-
-            {/* Gráfica principal */}
-            <ConsumoChart lecturas={lecturas} />
-
-            {/* Ranking + Alertas */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <RankingAreas consumoPorArea={metricas.consumoPorArea} areas={areasEmpresa} />
-              <AlertasTable alertas={alertas} />
-            </div>
-          </>
-        ) : (
-          /* Estado sin empresa seleccionada */
-          <div className="flex flex-col items-center justify-center py-32 text-center">
-            <div className="p-4 rounded-2xl bg-sky-500/10 mb-4">
-              <Building2 size={40} className="text-sky-400" />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-2">Selecciona una empresa</h2>
-            <p className="text-slate-400 text-sm mb-6 max-w-md">
-              Para ver el dashboard de monitoreo energético, primero selecciona o registra una empresa.
-            </p>
-            <button
-              onClick={() => setShowSelector(true)}
-              className="px-6 py-3 rounded-xl bg-sky-500 text-white font-semibold
-                hover:bg-sky-400 transition-colors cursor-pointer"
-            >
-              Seleccionar Empresa
-            </button>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-28 text-center relative">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-sm font-medium mb-8">
+            <Zap size={14} />
+            Plataforma de Monitoreo Energético en Tiempo Real
           </div>
-        )}
-      </main>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 max-w-4xl mx-auto">
+            Deja de pagar facturas{' '}
+            <span className="bg-gradient-to-r from-sky-400 to-violet-400 bg-clip-text text-transparent">
+              a ciegas
+            </span>
+          </h1>
+
+          <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Monitorea el consumo eléctrico de tu empresa en tiempo real.
+            Detecta anomalías, reduce costos y toma decisiones basadas en datos.
+            <strong className="text-emerald-400"> Ahorra entre 15% y 30%</strong> en tu factura mensual.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/registro"
+              className="group flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-violet-600 text-white text-lg font-bold hover:from-sky-400 hover:to-violet-500 transition-all shadow-2xl shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-105"
+            >
+              Registra tu empresa gratis
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="/login"
+              className="flex items-center gap-2 px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-slate-300 text-lg font-medium hover:bg-white/10 hover:text-white transition-all"
+            >
+              Ya tengo cuenta
+            </Link>
+          </div>
+
+          {/* Métricas de confianza */}
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            {[
+              { valor: '50+', label: 'Empresas monitoreadas', icon: Building2 },
+              { valor: '200+', label: 'Áreas protegidas', icon: Shield },
+              { valor: '30%', label: 'Ahorro promedio', icon: TrendingDown },
+              { valor: '24/7', label: 'Monitoreo continuo', icon: Clock },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="flex justify-center mb-2">
+                  <stat.icon size={20} className="text-sky-400" />
+                </div>
+                <p className="text-2xl font-bold text-white">{stat.valor}</p>
+                <p className="text-xs text-slate-500 mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== PROBLEMA ===== */}
+      <section className="py-20 border-t border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              El <span className="text-rose-400">Punto Ciego</span> Energético
+            </h2>
+            <p className="text-slate-400 max-w-xl mx-auto">
+              Las empresas industriales pagan facturas altísimas sin saber cuál área
+              está desperdiciando energía a las 3:00 AM.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Gauge,
+                title: 'Sin visibilidad',
+                desc: 'Solo conoces el total mensual. No sabes si el Cuarto de Máquinas o el Comedor está quemando presupuesto.',
+                color: 'rose',
+              },
+              {
+                icon: Clock,
+                title: 'Detección tardía',
+                desc: 'Las anomalías se detectan al llegar el recibo, semanas después. El daño económico ya está hecho.',
+                color: 'amber',
+              },
+              {
+                icon: TrendingDown,
+                title: '15-30% de desperdicio',
+                desc: 'Equipos encendidos innecesariamente, horarios sin optimizar, fugas de energía silenciosas y continuas.',
+                color: 'orange',
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className={`p-6 rounded-2xl bg-slate-800/50 border border-slate-700/30 hover:border-${item.color}-500/30 transition-all duration-300`}
+              >
+                <div className={`p-3 rounded-xl bg-${item.color}-500/10 w-fit mb-4`}>
+                  <item.icon size={24} className={`text-${item.color}-400`} />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CÓMO FUNCIONA ===== */}
+      <section className="py-20 border-t border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              ¿Cómo funciona?
+            </h2>
+            <p className="text-slate-400 max-w-xl mx-auto">
+              En 3 simples pasos tu empresa estará monitoreada en tiempo real.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                paso: '01',
+                titulo: 'Registra tu empresa',
+                desc: 'Crea tu cuenta gratuita y define las áreas que deseas monitorear: producción, oficinas, almacén, etc.',
+                icon: Building2,
+                color: 'sky',
+              },
+              {
+                paso: '02',
+                titulo: 'Instalamos sensores',
+                desc: 'Nuestro equipo instala sensores IoT (PZEM-004T) en cada área. Sin cables complicados, plug & play.',
+                icon: Factory,
+                color: 'violet',
+              },
+              {
+                paso: '03',
+                titulo: 'Monitorea y ahorra',
+                desc: 'Accede a tu dashboard en tiempo real. Recibe alertas de anomalías y reduce tu factura hasta un 30%.',
+                icon: BarChart3,
+                color: 'emerald',
+              },
+            ].map((item) => (
+              <div key={item.paso} className="relative group">
+                <div className={`p-8 rounded-2xl bg-gradient-to-br from-${item.color}-500/5 to-${item.color}-900/5 border border-${item.color}-500/20 hover:border-${item.color}-500/40 transition-all duration-300`}>
+                  <div className={`text-5xl font-extrabold text-${item.color}-500/20 mb-4`}>{item.paso}</div>
+                  <div className={`p-3 rounded-xl bg-${item.color}-500/10 w-fit mb-4`}>
+                    <item.icon size={24} className={`text-${item.color}-400`} />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.titulo}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FEATURES ===== */}
+      <section className="py-20 border-t border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Todo lo que necesitas
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: BarChart3, title: 'Dashboard en tiempo real', desc: 'Datos cada 3 segundos', color: 'sky' },
+              { icon: Bell, title: 'Alertas automáticas', desc: 'Detección instant de picos', color: 'rose' },
+              { icon: TrendingDown, title: 'Costos en $ MXN', desc: 'ROI claro y medible', color: 'emerald' },
+              { icon: Leaf, title: 'Huella de CO₂', desc: 'Métricas sustentables', color: 'teal' },
+              { icon: Shield, title: 'Múltiples áreas', desc: 'Monitoreo segmentado', color: 'violet' },
+              { icon: Factory, title: 'Cualquier industria', desc: 'Manufactura, textil, alimentos...', color: 'amber' },
+              { icon: Clock, title: 'Historial completo', desc: 'Registro de lecturas', color: 'indigo' },
+              { icon: CheckCircle2, title: 'Cero fallos', desc: '100% disponibilidad', color: 'green' },
+            ].map((f) => (
+              <div key={f.title} className="p-5 rounded-xl bg-slate-800/30 border border-slate-700/30 hover:bg-slate-800/50 transition-all group">
+                <f.icon size={20} className={`text-${f.color}-400 mb-3`} />
+                <h4 className="text-sm font-semibold text-white mb-1">{f.title}</h4>
+                <p className="text-xs text-slate-500">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== CTA FINAL ===== */}
+      <section className="py-20 border-t border-slate-800/50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <div className="p-10 rounded-3xl bg-gradient-to-br from-sky-500/10 to-violet-500/10 border border-sky-500/20">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              ¿Listo para dejar de pagar de más?
+            </h2>
+            <p className="text-slate-400 mb-8 max-w-lg mx-auto">
+              Registra tu empresa ahora y comienza a monitorear tu consumo eléctrico en tiempo real.
+              Sin compromisos, sin costos ocultos.
+            </p>
+            <Link
+              href="/registro"
+              className="group inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-violet-600 text-white text-lg font-bold hover:from-sky-400 hover:to-violet-500 transition-all shadow-2xl shadow-sky-500/25"
+            >
+              Comenzar ahora
+              <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="border-t border-slate-800/50 py-4 mt-8">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex items-center justify-between text-xs text-slate-600">
+      <footer className="border-t border-slate-800/50 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <div className="flex items-center gap-2">
-            <Activity size={14} />
-            <span>Intervalo: 3s · Ventana: 50 lecturas</span>
+            <Zap size={14} className="text-sky-500" />
+            <span className="font-medium text-slate-400">Energy Monitor</span>
+            <span>· Monitoreo energético inteligente</span>
           </div>
-          <span>Energy Monitor · MVP Hackathon 2026</span>
+          <span>© 2026 Energy Monitor · MVP Hackathon</span>
         </div>
       </footer>
     </div>

@@ -1,108 +1,85 @@
 'use client'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
-    getEmpresas, crearEmpresa as crearEmpresaStore,
-    eliminarEmpresa as eliminarEmpresaStore,
+    getEmpresas, getEmpresaPorId, registrarEmpresa,
     agregarArea as agregarAreaStore,
     editarArea as editarAreaStore,
     eliminarArea as eliminarAreaStore,
-    getEmpresaActiva, setEmpresaActiva as setActivaStore,
-    getRol, setRol as setRolStore,
+    login as loginStore, logout as logoutStore, getSesion,
 } from '../lib/empresasStore'
 
 export function useEmpresa() {
+    const [sesion, setSesion] = useState(null)
     const [empresas, setEmpresas] = useState([])
-    const [empresaActivaId, setEmpresaActivaId] = useState(null)
-    const [rol, setRolLocal] = useState('empresa')
     const [cargado, setCargado] = useState(false)
 
-    // Cargar datos del localStorage al montar
+    // Cargar sesión y empresas al montar
     useEffect(() => {
+        setSesion(getSesion())
         setEmpresas(getEmpresas())
-        setEmpresaActivaId(getEmpresaActiva())
-        setRolLocal(getRol())
         setCargado(true)
     }, [])
 
-    // Empresa activa (objeto completo)
+    // Empresa activa (del login)
     const empresaActiva = useMemo(() => {
-        return empresas.find(e => e.id === empresaActivaId) || null
-    }, [empresas, empresaActivaId])
+        if (!sesion || sesion.tipo !== 'empresa') return null
+        return getEmpresaPorId(sesion.empresaId)
+    }, [sesion, empresas])
 
-    // Áreas de la empresa activa
-    const areasEmpresa = useMemo(() => {
-        return empresaActiva?.areas || []
+    const areasEmpresa = useMemo(() => empresaActiva?.areas || [], [empresaActiva])
+    const isAdmin = sesion?.tipo === 'admin'
+    const isLoggedIn = !!sesion
+
+    // --- Auth ---
+    const login = useCallback((email, password) => {
+        const resultado = loginStore(email, password)
+        if (resultado.sesion) {
+            setSesion(resultado.sesion)
+            setEmpresas(getEmpresas())
+        }
+        return resultado
+    }, [])
+
+    const logout = useCallback(() => {
+        logoutStore()
+        setSesion(null)
+    }, [])
+
+    const registrar = useCallback((datos) => {
+        const resultado = registrarEmpresa(datos)
+        if (resultado.empresa) {
+            // Auto-login después de registrar
+            const loginResult = loginStore(datos.email, datos.password)
+            if (loginResult.sesion) setSesion(loginResult.sesion)
+            setEmpresas(getEmpresas())
+        }
+        return resultado
+    }, [])
+
+    // --- CRUD Áreas ---
+    const agregarArea = useCallback((area) => {
+        if (!empresaActiva) return null
+        const nueva = agregarAreaStore(empresaActiva.id, area)
+        setEmpresas(getEmpresas())
+        return nueva
     }, [empresaActiva])
 
-    // --- Acciones ---
-
-    const seleccionarEmpresa = useCallback((id) => {
-        setEmpresaActivaId(id)
-        setActivaStore(id)
-    }, [])
-
-    const cambiarRol = useCallback((nuevoRol) => {
-        setRolLocal(nuevoRol)
-        setRolStore(nuevoRol)
-    }, [])
-
-    const crearEmpresa = useCallback((nombre, industria) => {
-        const nueva = crearEmpresaStore(nombre, industria)
-        setEmpresas(getEmpresas())
-        return nueva
-    }, [])
-
-    const eliminarEmpresa = useCallback((id) => {
-        eliminarEmpresaStore(id)
-        setEmpresas(getEmpresas())
-        if (empresaActivaId === id) {
-            setEmpresaActivaId(null)
-            setActivaStore(null)
-        }
-    }, [empresaActivaId])
-
-    const agregarArea = useCallback((area) => {
-        if (!empresaActivaId) return null
-        const nueva = agregarAreaStore(empresaActivaId, area)
-        setEmpresas(getEmpresas())
-        return nueva
-    }, [empresaActivaId])
-
     const editarArea = useCallback((areaId, datos) => {
-        if (!empresaActivaId) return null
-        editarAreaStore(empresaActivaId, areaId, datos)
+        if (!empresaActiva) return null
+        editarAreaStore(empresaActiva.id, areaId, datos)
         setEmpresas(getEmpresas())
-    }, [empresaActivaId])
+    }, [empresaActiva])
 
     const eliminarArea = useCallback((areaId) => {
-        if (!empresaActivaId) return
-        eliminarAreaStore(empresaActivaId, areaId)
+        if (!empresaActiva) return
+        eliminarAreaStore(empresaActiva.id, areaId)
         setEmpresas(getEmpresas())
-    }, [empresaActivaId])
-
-    // Permisos por rol
-    const permisos = useMemo(() => ({
-        puedeCrearEmpresa: rol === 'admin',
-        puedeEliminarEmpresa: rol === 'admin',
-        puedeGestionarAreas: rol === 'admin' || rol === 'empresa',
-        puedeVerTodasEmpresas: rol === 'admin',
-        soloLectura: rol === 'operador',
-    }), [rol])
+    }, [empresaActiva])
 
     return {
-        empresas,
-        empresaActiva,
-        empresaActivaId,
-        areasEmpresa,
-        rol,
-        permisos,
-        cargado,
-        seleccionarEmpresa,
-        cambiarRol,
-        crearEmpresa,
-        eliminarEmpresa,
-        agregarArea,
-        editarArea,
-        eliminarArea,
+        sesion, empresas, empresaActiva, areasEmpresa,
+        isAdmin, isLoggedIn, cargado,
+        login, logout, registrar,
+        agregarArea, editarArea, eliminarArea,
     }
 }
