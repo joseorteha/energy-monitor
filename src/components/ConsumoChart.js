@@ -27,11 +27,11 @@ function CustomTooltip({ active, payload }) {
     if (!active || !payload?.length) return null
     const data = payload[0].payload
     return (
-        <div className="bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-xl p-4 shadow-2xl">
-            <p className="text-sm text-slate-400 mb-1 flex items-center gap-1.5">
+        <div className="card p-4 shadow-2xl">
+            <p className="text-sm text-dim mb-1 flex items-center gap-1.5">
                 <Clock size={13} /> {data.hora}
             </p>
-            <p className="text-white font-semibold">{data.area_nombre}</p>
+            <p className="text-base font-semibold">{data.area_nombre}</p>
             <div className="mt-2 space-y-1">
                 <p className="text-sky-400 text-sm flex items-center gap-1.5">
                     <Zap size={13} /> {data.consumo_kwh} kWh
@@ -58,14 +58,14 @@ export default function ConsumoChart({ lecturas }) {
     }))
 
     return (
-        <div className="relative rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-6">
+        <div className="relative card p-6">
             {/* Decoración de fondo */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-sky-500/5 rounded-full blur-3xl" />
 
             <div className="flex items-center justify-between mb-5">
                 <div>
-                    <h3 className="text-lg font-bold text-white">Consumo en Tiempo Real</h3>
-                    <p className="text-sm text-slate-400 mt-1">Últimas 20 lecturas · Actualización cada 3s</p>
+                    <h3 className="text-lg font-bold text-base">Consumo en Tiempo Real</h3>
+                    <p className="text-sm text-mute mt-1">Últimas 20 lecturas · Actualización cada 3s</p>
                 </div>
                 <div className="flex items-center gap-4 text-xs">
                     <span className="flex items-center gap-1.5">

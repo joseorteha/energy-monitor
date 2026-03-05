@@ -78,11 +78,11 @@ export default function StatsCards({ metricas }) {
                             <div className={`p-2.5 rounded-xl bg-white/5 ${card.iconColor}`}>
                                 <Icon size={card.featured ? 24 : 20} strokeWidth={2} />
                             </div>
-                            <span className="text-sm font-medium text-slate-400 uppercase tracking-wider">
+                            <span className="text-sm font-medium text-mute uppercase tracking-wider">
                                 {card.label}
                             </span>
                         </div>
-                        <p className={`font-bold text-white tracking-tight ${card.featured ? 'text-3xl' : 'text-2xl'}`}>
+                        <p className={`font-bold text-base tracking-tight ${card.featured ? 'text-3xl' : 'text-2xl'}`}>
                             {card.format(metricas)}
                         </p>
                     </div>

@@ -1,44 +1,159 @@
 @import "tailwindcss";
 
 /* ==========================================
-   Energy Monitor — Global Styles
-   Tema oscuro con acentos vibrantes
+   Energy Monitor — Sistema de Temas
+   Dark + Light mode con CSS custom properties
    ========================================== */
 
-/* Base body styling */
+/* ===== TEMA OSCURO (default) ===== */
+:root {
+  --bg-primary: #020617;
+  --bg-surface: #0f172a;
+  --bg-surface-hover: #1e293b;
+  --bg-card: rgba(15, 23, 42, 0.8);
+  --bg-input: #1e293b;
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  --border-default: rgba(51, 65, 85, 0.5);
+  --border-subtle: rgba(51, 65, 85, 0.3);
+
+  --accent-sky: #38bdf8;
+  --accent-violet: #a78bfa;
+  --accent-emerald: #34d399;
+  --accent-rose: #f43f5e;
+  --accent-amber: #fbbf24;
+
+  --gradient-hero: linear-gradient(135deg, rgba(56, 189, 248, 0.03), rgba(139, 92, 246, 0.03));
+  --grid-line: rgba(148, 163, 184, 0.03);
+  --scrollbar-track: #0f172a;
+  --scrollbar-thumb: #334155;
+  --scrollbar-thumb-hover: #475569;
+}
+
+/* ===== TEMA CLARO ===== */
+.light {
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --bg-input: #f1f5f9;
+  --bg-overlay: rgba(0, 0, 0, 0.4);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #f8fafc;
+
+  --border-default: rgba(203, 213, 225, 0.8);
+  --border-subtle: rgba(203, 213, 225, 0.5);
+
+  --accent-sky: #0284c7;
+  --accent-violet: #7c3aed;
+  --accent-emerald: #059669;
+  --accent-rose: #e11d48;
+  --accent-amber: #d97706;
+
+  --gradient-hero: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(139, 92, 246, 0.05));
+  --grid-line: rgba(148, 163, 184, 0.08);
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.bg-base {
+  background-color: var(--bg-primary);
+}
+
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.bg-surface-hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.bg-card {
+  background: var(--bg-card);
+}
+
+.bg-input {
+  background-color: var(--bg-input);
+}
+
+.bg-overlay {
+  background-color: var(--bg-overlay);
+}
+
+.text-base {
+  color: var(--text-primary);
+}
+
+.text-dim {
+  color: var(--text-secondary);
+}
+
+.text-mute {
+  color: var(--text-muted);
+}
+
+.border-default {
+  border-color: var(--border-default);
+}
+
+.border-subtle {
+  border-color: var(--border-subtle);
+}
+
+/* ===== BASE STYLES ===== */
 body {
-  background: #020617;
-  background-image: 
+  background: var(--bg-primary);
+  background-image:
     radial-gradient(ellipse at 10% 20%, rgba(56, 189, 248, 0.03) 0%, transparent 50%),
     radial-gradient(ellipse at 90% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
   min-height: 100vh;
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Scrollbar personalizado */
+.light body {
+  background-image:
+    radial-gradient(ellipse at 10% 20%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
+
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: var(--scrollbar-track);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* ==========================================
-   Animaciones personalizadas
+   Animaciones
    ========================================== */
-
-/* Fade-in para filas nuevas en la tabla de alertas */
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -49,11 +164,13 @@ body {
   animation: fadeIn 0.4s ease-out;
 }
 
-/* Efecto pulse rojo para emergencias */
 @keyframes emergencyPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: inset 0 0 0 0 rgba(244, 63, 94, 0);
   }
+
   50% {
     box-shadow: inset 0 0 60px 10px rgba(244, 63, 94, 0.15);
   }
@@ -63,11 +180,11 @@ body {
   animation: emergencyPulse 0.8s ease-in-out 3;
 }
 
-/* Efecto shimmer para las barras de progreso */
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -77,11 +194,13 @@ body {
   animation: shimmer 2.5s infinite;
 }
 
-/* Badge EN VIVO pulsante */
 @keyframes livePulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -91,11 +210,13 @@ body {
   animation: livePulse 1.5s ease-in-out infinite;
 }
 
-/* Efecto de brillo en botón de emergencia */
 @keyframes emergencyGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
   }
+
   50% {
     box-shadow: 0 0 30px rgba(244, 63, 94, 0.6), 0 0 60px rgba(244, 63, 94, 0.2);
   }
@@ -105,10 +226,48 @@ body {
   animation: emergencyGlow 2s ease-in-out infinite;
 }
 
-/* Grid pattern de fondo (sutil) */
+/* Grid pattern de fondo */
 .bg-grid {
-  background-image: 
-    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+/* Cards con tema */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  backdrop-filter: blur(16px);
+  border-radius: 1rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--border-default);
+}
+
+/* Header con tema */
+.header-bg {
+  background: color-mix(in srgb, var(--bg-primary) 80%, transparent);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Inputs con tema */
+.input-themed {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.input-themed:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.input-themed::placeholder {
+  color: var(--text-muted);
 }
