@@ -6,6 +6,7 @@ import { Zap, Building2, User, Mail, Lock, Briefcase, ArrowRight, AlertCircle } 
 import { INDUSTRIAS } from '../../lib/empresasStore'
 import { useEmpresa } from '../../hooks/useEmpresa'
 import ThemeToggle from '../../components/ThemeToggle'
+import Image from 'next/image'
 
 export default function RegistroPage() {
     const router = useRouter()
@@ -45,10 +46,7 @@ export default function RegistroPage() {
             <div className="w-full max-w-md relative">
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center gap-3 group">
-                        <div className="p-2 rounded-xl bg-gradient-to-br from-sky-500 to-violet-600 shadow-lg shadow-sky-500/20">
-                            <Zap size={24} className="text-white" />
-                        </div>
-                        <span className="text-2xl font-bold text-base">Energy Monitor</span>
+                        <Image src="/logo.png" alt="Energy Monitor" width={240} height={72} className="h-16 w-auto" priority />
                     </Link>
                     <p className="text-dim text-sm mt-3">Registra tu empresa para comenzar a monitorear</p>
                 </div>

@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Zap, Shield, TrendingDown, Leaf, ArrowRight,
   BarChart3, Bell, Clock, CheckCircle2, ChevronRight,
@@ -13,13 +14,8 @@ export default function LandingPage() {
       {/* NAV */}
       <nav className="sticky top-0 z-50 header-bg">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-sky-500 to-violet-600 shadow-lg shadow-sky-500/20">
-              <Zap size={22} className="text-white" />
-            </div>
-            <span className="text-xl font-bold text-base">
-              Energy Monitor
-            </span>
+          <div className="flex items-center gap-2">
+            <Image src="/logo.png" alt="Energy Monitor" width={220} height={66} className="h-14 w-auto" priority />
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
@@ -189,8 +185,7 @@ export default function LandingPage() {
       <footer className="border-t border-default py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-mute">
           <div className="flex items-center gap-2">
-            <Zap size={14} className="text-sky-500" />
-            <span className="font-medium text-dim">Energy Monitor</span>
+            <Image src="/logo.png" alt="Energy Monitor" width={140} height={42} className="h-10 w-auto opacity-70" />
             <span>· Monitoreo energético inteligente</span>
           </div>
           <span>© 2026 Energy Monitor · MVP Hackathon</span>

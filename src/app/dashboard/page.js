@@ -13,6 +13,7 @@ import RankingAreas from '../../components/RankingAreas'
 import AlertasTable from '../../components/AlertasTable'
 import GestionAreas from '../../components/GestionAreas'
 import ThemeToggle from '../../components/ThemeToggle'
+import Image from 'next/image'
 
 export default function DashboardPage() {
     const router = useRouter()
@@ -62,11 +63,8 @@ export default function DashboardPage() {
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-xl bg-gradient-to-br from-sky-500 to-violet-600 shadow-lg shadow-sky-500/20">
-                                <Zap size={24} className="text-white" />
-                            </div>
+                            <Image src="/logo.png" alt="Energy Monitor" width={200} height={60} className="h-12 w-auto" />
                             <div>
-                                <h1 className="text-xl sm:text-2xl font-bold text-base">Energy Monitor</h1>
                                 <p className="text-xs text-mute flex items-center gap-1"><Building2 size={11} />{empresaActiva.nombre}</p>
                             </div>
                             {corriendo && (

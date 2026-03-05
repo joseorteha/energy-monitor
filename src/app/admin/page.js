@@ -5,6 +5,7 @@ import { Zap, Building2, Users, MapPin, LogOut, ChevronRight, Factory, Calendar,
 import { useEmpresa } from '../../hooks/useEmpresa'
 import { getIcono } from '../../lib/iconMap'
 import ThemeToggle from '../../components/ThemeToggle'
+import Image from 'next/image'
 
 export default function AdminPage() {
     const router = useRouter()
@@ -34,14 +35,10 @@ export default function AdminPage() {
             <header className="sticky top-0 z-50 header-bg">
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-xl bg-gradient-to-br from-rose-500 to-orange-600 shadow-lg shadow-rose-500/20">
-                            <Shield size={24} className="text-white" />
-                        </div>
+                        <Image src="/logo.png" alt="Energy Monitor" width={200} height={60} className="h-12 w-auto" />
                         <div>
-                            <h1 className="text-xl sm:text-2xl font-bold text-base">Energy Monitor</h1>
-                            <p className="text-xs text-rose-500 font-medium">Panel de Administración</p>
-                        </div>
-                    </div>
+                            <p className="text-xs text-rose-500 font-semibold uppercase tracking-wider">Panel Admin</p>
+                        </div>            </div>
                     <div className="flex items-center gap-3">
                         <ThemeToggle />
                         <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-dim hover:text-base hover:bg-surface-hover transition-all cursor-pointer border border-default">
